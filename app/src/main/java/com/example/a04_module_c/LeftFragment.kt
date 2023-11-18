@@ -126,7 +126,7 @@ class LeftFragment: Fragment() {
         // the data that will post to server
         val requestBody = FormBody.Builder()
             .add("activityName", name)
-            .add("activityDate", "2023-11-18")
+            .add("activityDate", Date().toString())
             .add("activityType", "户外活动")
             .add("activityDescription", "blalbalblalba.....")
             .add("maxParticipant", "30")
