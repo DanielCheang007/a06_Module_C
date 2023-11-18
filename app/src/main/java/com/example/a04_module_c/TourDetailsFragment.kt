@@ -79,6 +79,8 @@ class TourDetailsFragment: Fragment() {
             .put(requestBody)
             .build()
 
+        notifyActivity()
+
         agent.newCall(request)
             .enqueue(object: Callback {
                 override fun onFailure(call: Call, e: IOException) {
@@ -92,5 +94,9 @@ class TourDetailsFragment: Fragment() {
             })
     }
 
+    fun notifyActivity() {
+        val at = activity as? MainActivity2
+        at?.sayHi()
+    }
 
 }

@@ -41,33 +41,12 @@ class LeftFragment: Fragment() {
 
         val addTourBtn = view?.findViewById<Button>(R.id.addTour)
         addTourBtn?.setOnClickListener {
-            val url = getString(R.string.api_base) + "/tour"
+            createTour()
+        }
 
-            // the data that will post to server
-            val requestBody = FormBody.Builder()
-                .add("activityName", "test001")
-                .add("activityDate", "2023-11-18")
-                .add("activityType", "户外活动")
-                .add("activityDescription", "blalbalblalba.....")
-                .add("maxParticipant", "30")
-                .build()
-
-            // wrap the data to a request package
-            val request = Request.Builder()
-                .url(url)
-                .post(requestBody)
-                .build()
-
-            agent.newCall(request).enqueue(object: Callback{
-                override fun onFailure(call: Call, e: IOException) {
-                    TODO("Not yet implemented")
-                }
-
-                override fun onResponse(call: Call, response: Response) {
-                    println(response?.body.toString())
-                }
-
-            })
+        val refreshBtn = view?.findViewById<Button>(R.id.refresh)
+        refreshBtn?.setOnClickListener {
+            fetchAllTours()
         }
 
 
@@ -103,12 +82,43 @@ class LeftFragment: Fragment() {
 
         tourListView.adapter = adapter
         tourListView.layoutManager = LinearLayoutManager(activity)
-        getTours()
+
+        fetchAllTours()
 
         return view
     }
 
-    private fun getTours() {
+    private fun createTour() {
+        val url = getString(R.string.api_base) + "/tour"
+
+        // the data that will post to server
+        val requestBody = FormBody.Builder()
+            .add("activityName", "test001")
+            .add("activityDate", "2023-11-18")
+            .add("activityType", "户外活动")
+            .add("activityDescription", "blalbalblalba.....")
+            .add("maxParticipant", "30")
+            .build()
+
+        // wrap the data to a request package
+        val request = Request.Builder()
+            .url(url)
+            .post(requestBody)
+            .build()
+
+        agent.newCall(request).enqueue(object: Callback{
+            override fun onFailure(call: Call, e: IOException) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                println(response?.body.toString())
+            }
+
+        })
+    }
+
+    private fun fetchAllTours() {
         val url = getString(R.string.api_base) + "/tour"
 
         // the data that will post to server
@@ -140,5 +150,11 @@ class LeftFragment: Fragment() {
                     }
                 }
             })
+    }
+
+    fun sayHi() {
+        println("-- say Hi from left fragment")
+
+        fetchAllTours()
     }
 }

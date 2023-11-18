@@ -24,6 +24,7 @@ class TourAdapter(private val mTours: ArrayList<Tour>): RecyclerView.Adapter<Tou
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val nameTextView = itemView.findViewById<TextView>(R.id.tourName)
         val dateTextView = itemView.findViewById<TextView>(R.id.tourDate)
+        val labelView = itemView.findViewById<TextView>(R.id.tourLabel)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -42,6 +43,12 @@ class TourAdapter(private val mTours: ArrayList<Tour>): RecyclerView.Adapter<Tou
         val formatter = SimpleDateFormat(pattern)
         val dateStr = formatter.format(tour.activityDate)
         holder.dateTextView.setText(dateStr)
+
+        if (tour.isActive.toString().equals("1")) {
+            holder.labelView.visibility = View.INVISIBLE
+        } else {
+            holder.labelView.visibility = View.VISIBLE
+        }
 
         holder.itemView.setOnClickListener {
             println("-- here: " + tour.activityName)
