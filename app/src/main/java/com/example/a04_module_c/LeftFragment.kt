@@ -10,6 +10,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
@@ -82,7 +83,8 @@ class LeftFragment: Fragment() {
         adapter = TourAdapter(ArrayList<Tour>())
 
         tourListView.adapter = adapter
-        tourListView.layoutManager = LinearLayoutManager(activity)
+//        tourListView.layoutManager = LinearLayoutManager(activity)
+        tourListView.layoutManager = GridLayoutManager(activity, 2)
 
         fetchAllTours()
 
