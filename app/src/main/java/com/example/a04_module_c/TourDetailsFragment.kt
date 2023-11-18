@@ -15,15 +15,10 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class TourDetailsFragment: Fragment() {
-    private var activityId: Int? = null
     private var isActive: String? = "0"
-    private var activityName: String? = null
-    private var activityDate: Date? = null
-    private var activityType: String? = null
-    private var activityDescription: String? = null
+    private var tour: Tour ?= null
 
     private val agent = OkHttpClient()
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,41 +27,41 @@ class TourDetailsFragment: Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.tour_details_fragment, container, false)
 
-        activityId = arguments?.getInt("activityId")
-        isActive = arguments?.getString("isActive")
+        tour = arguments?.getSerializable("tour") as Tour
 
-        activityName = arguments?.getString("activityName")
-        view?.findViewById<TextView>(R.id.activityName)?.text = activityName
+        if (tour?.isActive == "1") {
+            isActive = "1"
+        } else {
+            isActive = "0"
+        }
 
-        val time = arguments?.getLong("activityDate")
-        activityDate = time?.let { Date(it) }
-        val pattern = "yyyy-MM-dd"
-        val formatter = SimpleDateFormat(pattern)
-        val dateStr = formatter.format(activityDate)
-        view?.findViewById<TextView>(R.id.activityDate)?.text = dateStr
+        view?.findViewById<TextView>(R.id.activityName)?.text = tour?.activityName
 
-        activityType = arguments?.getString("activityType")
-        view?.findViewById<TextView>(R.id.activityType)?.text = activityType
+        view?.findViewById<TextView>(R.id.activityDate)?.text = tour?.dateStr()
 
-        activityDescription = arguments?.getString("activityDescription")
-        view?.findViewById<TextView>(R.id.activityDescription)?.text = activityDescription
+        view?.findViewById<TextView>(R.id.activityType)?.text = tour?.activityType
+
+        view?.findViewById<TextView>(R.id.activityDescription)?.text = tour?.activityDescription
 
 
         val btn = view.findViewById<Button>(R.id.toggleTour)
         btn.setOnClickListener {
-            activityId?.let { it1 -> toggleTourActive(it1) }
+            toggleTourActive(tour)
         }
-
 
         return view
     }
 
-    private fun toggleTourActive(activityId: Int) {
+    private fun toggleTourActive(tour: Tour?) {
+        if (tour == null) {
+            return
+        }
+
         var targetStatus = "1"
         if (isActive == "1") {
             targetStatus = "0"
         }
-        val url = getString(R.string.api_base) + "/tour/" + activityId + "?isActive=" + targetStatus
+        val url = getString(R.string.api_base) + "/tour/" + tour.activityId + "?isActive=" + targetStatus
 
         // the data that will post to server
         val requestBody = FormBody.Builder()
@@ -79,7 +74,7 @@ class TourDetailsFragment: Fragment() {
             .put(requestBody)
             .build()
 
-        notifyActivity()
+
 
         agent.newCall(request)
             .enqueue(object: Callback {
@@ -90,13 +85,15 @@ class TourDetailsFragment: Fragment() {
                 override fun onResponse(call: Call, response: Response) {
                     println(response?.body?.string())
                     isActive = targetStatus
+
+                    notifyActivity()
                 }
             })
     }
 
     fun notifyActivity() {
         val at = activity as? MainActivity2
-        at?.sayHi()
+        at?.tourUpdated()
     }
 
 }

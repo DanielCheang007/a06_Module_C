@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.time.format.DateTimeFormatter
 
@@ -39,10 +40,7 @@ class TourAdapter(private val mTours: ArrayList<Tour>): RecyclerView.Adapter<Tou
 
         holder.nameTextView.setText(tour.activityName)
 
-        val pattern = "yyyy-MM-dd"
-        val formatter = SimpleDateFormat(pattern)
-        val dateStr = formatter.format(tour.activityDate)
-        holder.dateTextView.setText(dateStr)
+        holder.dateTextView.setText(tour.dateStr())
 
         if (tour.isActive.toString().equals("1")) {
             holder.labelView.visibility = View.INVISIBLE
@@ -57,12 +55,7 @@ class TourAdapter(private val mTours: ArrayList<Tour>): RecyclerView.Adapter<Tou
             val frag = TourDetailsFragment()
 
             val bundle = Bundle()
-            bundle.putInt("activityId", tour.activityId)
-            bundle.putString("isActive", tour.isActive)
-            bundle.putString("activityName", tour.activityName)
-            bundle.putLong("activityDate", tour.activityDate.time)
-            bundle.putString("activityType", tour.activityType)
-            bundle.putString("activityDescription", tour.activityDescription)
+            bundle.putSerializable("tour", tour as Serializable)
             frag.arguments = bundle
 
             val transaction = activity.supportFragmentManager.beginTransaction()

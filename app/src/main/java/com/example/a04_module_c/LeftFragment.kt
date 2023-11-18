@@ -17,6 +17,7 @@ import com.google.gson.reflect.TypeToken
 import okhttp3.*
 import org.json.JSONObject
 import java.io.IOException
+import java.util.Date
 
 class LeftFragment: Fragment() {
     private val agent = OkHttpClient()
@@ -93,7 +94,7 @@ class LeftFragment: Fragment() {
 
         // the data that will post to server
         val requestBody = FormBody.Builder()
-            .add("activityName", "test001")
+            .add("activityName", "test" + Date().time)
             .add("activityDate", "2023-11-18")
             .add("activityType", "户外活动")
             .add("activityDescription", "blalbalblalba.....")
@@ -113,6 +114,8 @@ class LeftFragment: Fragment() {
 
             override fun onResponse(call: Call, response: Response) {
                 println(response?.body.toString())
+
+                reloadTourList()
             }
 
         })
@@ -152,7 +155,7 @@ class LeftFragment: Fragment() {
             })
     }
 
-    fun sayHi() {
+    fun reloadTourList() {
         println("-- say Hi from left fragment")
 
         fetchAllTours()

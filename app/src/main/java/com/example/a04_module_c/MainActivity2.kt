@@ -34,16 +34,15 @@ class MainActivity2 : AppCompatActivity() {
         bundle.putSerializable("user", user as Serializable)
         leftFrag?.arguments = bundle
         transaction.replace(R.id.leftLayout, leftFrag)
-//        leftFrag.fetchAllTours()
 
         transaction.replace(R.id.rightLayout, RightFragment())
         transaction.commit()
     }
 
-    fun sayHi() {
+    fun tourUpdated() {
         println("-- say hi from main activity2")
 
-        leftFrag.sayHi()
+        leftFrag.reloadTourList()
     }
 
 
