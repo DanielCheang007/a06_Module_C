@@ -38,6 +38,39 @@ class LeftFragment: Fragment() {
         val username = view?.findViewById<TextView>(R.id.username)
         username?.setText(user?.username)
 
+
+        val addTourBtn = view?.findViewById<Button>(R.id.addTour)
+        addTourBtn?.setOnClickListener {
+            val url = getString(R.string.api_base) + "/tour"
+
+            // the data that will post to server
+            val requestBody = FormBody.Builder()
+                .add("activityName", "test001")
+                .add("activityDate", "2023-11-18")
+                .add("activityType", "户外活动")
+                .add("activityDescription", "blalbalblalba.....")
+                .add("maxParticipant", "30")
+                .build()
+
+            // wrap the data to a request package
+            val request = Request.Builder()
+                .url(url)
+                .post(requestBody)
+                .build()
+
+            agent.newCall(request).enqueue(object: Callback{
+                override fun onFailure(call: Call, e: IOException) {
+                    TODO("Not yet implemented")
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    println(response?.body.toString())
+                }
+
+            })
+        }
+
+
         // search tour list
         val searchFiled = view?.findViewById<EditText>(R.id.searchQuery)
         searchFiled?.addTextChangedListener(object: TextWatcher{

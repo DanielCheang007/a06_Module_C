@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity() {
                         if (validated) {
                             // 將 json 裡的 user 物件，轉為 kotlin 裡 User 的 instance
                             val userData = resObj.getJSONObject("user")
-                            val user = Gson().fromJson(userData.toString(), User::class.java)
+                            val user : User = Gson().fromJson(userData.toString(), User::class.java)
 
                             val intent = Intent(this@MainActivity, MainActivity2::class.java)
                             intent.putExtra("user", user as Serializable) // 將 user 傳給 工作頁 activity
