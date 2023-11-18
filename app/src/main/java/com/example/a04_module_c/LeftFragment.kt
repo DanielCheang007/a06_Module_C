@@ -1,14 +1,18 @@
 package com.example.a04_module_c
 
+import android.app.AlertDialog
+import android.app.Dialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -43,7 +47,8 @@ class LeftFragment: Fragment() {
 
         val addTourBtn = view?.findViewById<Button>(R.id.addTour)
         addTourBtn?.setOnClickListener {
-            createTour()
+//            createTour()
+            popUp()
         }
 
         val refreshBtn = view?.findViewById<Button>(R.id.refresh)
@@ -91,12 +96,36 @@ class LeftFragment: Fragment() {
         return view
     }
 
-    private fun createTour() {
+    private fun popUp() {
+        val builder = AlertDialog.Builder(this.activity)
+            .create()
+        val view = layoutInflater.inflate(R.layout.dialog,null)
+
+        val dismissBtn = view.findViewById<Button>(R.id.dismissBtn)
+
+        dismissBtn.setOnClickListener {
+            builder.dismiss()
+        }
+
+        var activityNameView = view.findViewById<EditText>(R.id.editActivityName)
+
+        val createTourBtn = view.findViewById<Button>(R.id.createTour)
+        createTourBtn.setOnClickListener {
+            createTour(activityNameView.text.toString())
+            builder.dismiss()
+        }
+
+        builder.setView(view)
+        builder.setCanceledOnTouchOutside(false)
+        builder.show()
+    }
+
+    private fun createTour(name: String = "test" + Date().time) {
         val url = getString(R.string.api_base) + "/tour"
 
         // the data that will post to server
         val requestBody = FormBody.Builder()
-            .add("activityName", "test" + Date().time)
+            .add("activityName", name)
             .add("activityDate", "2023-11-18")
             .add("activityType", "户外活动")
             .add("activityDescription", "blalbalblalba.....")
