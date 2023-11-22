@@ -2,6 +2,7 @@ package com.example.a04_module_c
 
 import android.app.AlertDialog
 import android.app.Dialog
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,12 +12,15 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import okhttp3.*
@@ -30,6 +34,7 @@ class LeftFragment: Fragment() {
 
     lateinit var adapter: TourAdapter
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -37,7 +42,7 @@ class LeftFragment: Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.left_fragment, container, false)
 
-        val user:User = arguments?.getSerializable("user") as User
+        val user: User? = arguments?.getSerializable("user", User::class.java)
         println("---- here")
         println(user)
 
@@ -56,6 +61,10 @@ class LeftFragment: Fragment() {
             fetchAllTours()
         }
 
+        if (user?.thumbnail != null) {
+            val avatarImg = view?.findViewById<ImageView>(R.id.avatarImage)
+            avatarImg?.load(getString(R.string.api_base) + "/" + user?.thumbnail)
+        }
 
         // search tour list
         val searchFiled = view?.findViewById<EditText>(R.id.searchQuery)
